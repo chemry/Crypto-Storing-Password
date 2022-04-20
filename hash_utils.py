@@ -2,6 +2,7 @@ import bcrypt
 import hashlib
 import passlib.hash
 import secrets
+from argon2 import PasswordHasher
 
 pepper = "8fa1921c"
 
@@ -19,7 +20,7 @@ def sha256(password):
 
 def verify_sha256(password, hash):
     res = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    return res == hash
+    return "$5$" + res == hash
 
 # Advanced SHA-512 hashing, with salt, peppr, rounds and provides more protection!
 def sha512(password):
@@ -38,6 +39,27 @@ def verify_sha512(password, hash):
     return res
 
 
+def bcrypt_enc(password):
+    password = password.encode('utf-8')
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    # print(hashed)
+
+def verify_bcrypt(password, hash):
+    return bcrypt.checkpw(password, hash)
+
+
+def argon2_enc(password):
+    ph = PasswordHasher()
+    hash = ph.hash(password)
+    # print(hash)
+    return hash
+
+def verify_argon2(password, hash):
+    ph = PasswordHasher()
+    try:
+        return ph.verify(password, hash)
+    except:
+        return False 
 
 def verify(password, hash):
     # print(hash)
@@ -48,6 +70,11 @@ def verify(password, hash):
     if type == "0":
         return password == hash[3:]
     elif type == "5":
-        return verify_sha256(password, hash[3:])
+        return verify_sha256(password, hash)
     elif type == "6":
         return verify_sha512(password, hash)
+    elif type == "2b":
+        return verify_bcrypt(password, hash)
+    elif type == "argon2id":
+        return verify_argon2(password, hash)    
+    

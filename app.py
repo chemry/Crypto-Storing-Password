@@ -22,7 +22,9 @@ def printMethod():
     print("""
         1. Plaintext (Very Dangerous!)
         2. Pure SHA-256 (Still Dangerous)
-        3. SHA-512 with salt and rounds""")
+        3. SHA-512 with salt and rounds
+        4. Bcrypt
+        5. Argon2id""")
 
 def printLog(output):
     print(OUTPUT_STR + output)
@@ -44,13 +46,17 @@ def register():
     # print(hs)
     # pw.verify_sha512(password, hs)
     printMethod()
-    option = getOption([1, 2, 3])
+    option = getOption([1, 2, 3, 4, 5])
     if option == 1:
         password = pw.plain(password)
     elif option == 2:
         password = pw.sha256(password)
     elif option == 3:
         password = pw.sha512(password)
+    elif option == 4:
+        password = pw.bcrypt_enc(password)
+    elif option == 5:
+        password = pw.argon2_enc(password)
 
     db.insertUser(username, password)
     printLog("Success!")
@@ -103,7 +109,7 @@ def main():
             login()
         elif option == 'debug':
             db.printAll()
-    
+
 
 
 
