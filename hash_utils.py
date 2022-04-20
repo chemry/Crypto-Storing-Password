@@ -57,8 +57,9 @@ def argon2_enc(password):
 def verify_argon2(password, hash):
     ph = PasswordHasher()
     try:
-        return ph.verify(password, hash)
+        return ph.verify(hash, password)
     except:
+        print(hash, password)
         return False 
 
 def verify(password, hash):
