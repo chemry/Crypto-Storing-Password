@@ -31,8 +31,11 @@ def getPassword(username):
 def printAll():
     cur = conn.cursor()
     cur.execute('select * from user')
+    fs = " " * 8 + "{:15}\t{}"
+    print(fs.format("USERNAME", "PASSWORD"))
+    print(" " * 8 + "-"*130)
     for entry in cur.fetchall():
-        print(entry)
+        print(fs.format(entry[0], entry[1]))
     # print(cur.fetchall())
 
 

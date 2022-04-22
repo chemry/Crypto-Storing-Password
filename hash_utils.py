@@ -43,8 +43,11 @@ def bcrypt_enc(password):
     password = password.encode('utf-8')
     hashed = bcrypt.hashpw(password, bcrypt.gensalt())
     # print(hashed)
+    return hashed.decode('utf-8')
 
 def verify_bcrypt(password, hash):
+    password = password.encode('utf-8')
+    hash = hash.encode('utf-8')
     return bcrypt.checkpw(password, hash)
 
 
